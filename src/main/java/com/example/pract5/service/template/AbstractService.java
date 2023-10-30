@@ -33,7 +33,7 @@ public abstract class AbstractService<E extends AbstractEntity<F>, R  extends Co
         try{
             return repo.findById(id).get();
         }catch (NoSuchElementException e){
-            throw new NotFoundException("Книга не найдена");
+            throw new NotFoundException("Не найдено!");
         }
     }
 

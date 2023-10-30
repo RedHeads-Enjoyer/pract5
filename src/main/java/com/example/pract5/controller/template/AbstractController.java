@@ -38,7 +38,7 @@ public abstract class AbstractController<E extends AbstractEntity<F>, S extends 
     public ResponseEntity<String> deleteOne(Long id) {
         try {
             service.deleteOne(id);
-            return ResponseEntity.ok("удалена");
+            return ResponseEntity.ok("Удалено!");
         } catch (NotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
@@ -49,6 +49,7 @@ public abstract class AbstractController<E extends AbstractEntity<F>, S extends 
     @Override
     public ResponseEntity updateOne(Long id, F form) {
         try{
+            service.updateOne(id, form);
             return  ResponseEntity.ok(form);
         }catch (Exception e){
             return ResponseEntity.badRequest().body("Ошибка");
@@ -59,12 +60,9 @@ public abstract class AbstractController<E extends AbstractEntity<F>, S extends 
     public ResponseEntity<String> createOne(F form) {
         try {
             service.createOne(form);
-            return ResponseEntity.ok().body("Книга успешно создана");
-        } catch (Exception e){
+            return ResponseEntity.ok().body("Успешно создано!");
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
-
-
 }
