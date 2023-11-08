@@ -2,59 +2,40 @@ package com.example.pract5.controller;
 
 
 import com.example.pract5.entity.Telephone;
-import com.example.pract5.exception.ResourceNotFoundException;
-import com.example.pract5.repository.TelephoneRepository;
-import org.springframework.http.ResponseEntity;
+import com.example.pract5.service.TelephoneService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.List;;
 
 @RestController
 @RequestMapping("/api")
 public class TelephoneController {
-    private TelephoneRepository telephoneRepository;
-    @GetMapping("/telephones")
-    public List<Telephone> getAll() {
-        return telephoneRepository.findAll();
-    }
+    TelephoneService telephoneService;
 
     @PostMapping("/telephones")
-    public Telephone createTelephone(@RequestBody Telephone telephone) {
-        return telephoneRepository.save(telephone);
+    public int create(@RequestBody Telephone telephone) {
+        telephoneService.save(telephone);
+        return telephone.getId();
+    }
+
+    @GetMapping("/telephones")
+    public List<Telephone> getAll() {
+        return telephoneService.getAll();
     }
 
     @GetMapping("/telephones/{id}")
-    public ResponseEntity<Telephone> getTelephoneById(@PathVariable int id) {
-        Telephone telephone = telephoneRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Telephone not exist with id :" + id));
-        return ResponseEntity.ok(telephone);
+    public Telephone getById(@PathVariable int id) {
+        return telephoneService.getById(id);
     }
 
     @PutMapping("/telephones/{id}")
-    public ResponseEntity<Telephone> updateTelephone(@PathVariable int id, @RequestBody Telephone newTelephone){
-        Telephone telephone = telephoneRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Telephone not exist with id :" + id));
-
-        telephone.setBatterySize(newTelephone.getBatterySize());
-        telephone.setCompany(newTelephone.getCompany());
-        telephone.setPrice(newTelephone.getPrice());
-        telephone.setSeller_id(newTelephone.getSeller_id());
-        telephone.setTitle(newTelephone.getTitle());
-
-        Telephone updatedTelephone = telephoneRepository.save(telephone);
-        return ResponseEntity.ok(updatedTelephone);
+    public Telephone update(@PathVariable int id, @RequestBody Telephone telephone){
+        telephoneService.update(id, telephone);
+        return telephone;
     }
 
     @DeleteMapping("/telephones/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteTelephone(@PathVariable int id){
-        Telephone telephone = telephoneRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Telephone not exist with id :" + id));
-
-        telephoneRepository.delete(telephone);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", Boolean.TRUE);
-        return ResponseEntity.ok(response);
+    public void delete(@PathVariable int id){
+        telephoneService.delete(id);
     }
 }
