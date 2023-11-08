@@ -9,6 +9,7 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column
-    private Type type;
+//    @Column
+//    @ManyToOne
+//    private Client client;
 }
