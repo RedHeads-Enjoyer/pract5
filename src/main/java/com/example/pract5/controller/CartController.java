@@ -23,43 +23,9 @@ public class CartController {
     @Autowired
     CartService cartService;
 
-    @Autowired
-    BookRepository bookRepository;
-    @Autowired
-    TelephoneRepository telephoneRepository;
-    @Autowired
-    WashingMachineRepository washingMachineRepository;
-
-
     @PostMapping ("/cart")
     public ModelAndView  create(@RequestParam("productId") int productId, @RequestParam("clientId") int clientId, @RequestParam("type")Type type, @RequestParam("title") String  title) {
-        if (type == Type.Books) {
-            Book book = bookRepository.findById(productId).orElseThrow();
-            if (book.getAmount() != 0) {
-                book.setAmount(book.getAmount() - 1);
-                bookRepository.save(book);
-                cartService.save(new Cart(type, productId, 1, clientId, title));
-            }
-        }
-
-        else if (type == Type.Plumbing) {
-            WashingMachine washingMachine = washingMachineRepository.findById(productId).orElseThrow();
-            if (washingMachine.getAmount() != 0) {
-                washingMachine.setAmount(washingMachine.getAmount() - 1);
-                washingMachineRepository.save(washingMachine);
-                cartService.save(new Cart(type, productId, 1, clientId, title));
-            }
-        }
-
-        else if (type == Type.Electronics) {
-            Telephone telephone = telephoneRepository.findById(productId).orElseThrow();
-            if (telephone.getAmount() != 0) {
-                telephone.setAmount(telephone.getAmount() - 1);
-                telephoneRepository.save(telephone);
-                cartService.save(new Cart(type, productId, 1, clientId, title));
-            }
-        }
-
+        cartService.create(productId, clientId,type, title);
         return new ModelAndView("redirect:" + "http://localhost:8080/");
     }
 
@@ -78,6 +44,12 @@ public class CartController {
     @PostMapping("/cart/decrease")
     public ModelAndView decrease(@RequestParam("productId") int id) throws ResourceNotFoundException {
         cartService.decrease(id);
+        return new ModelAndView("redirect:" + "http://localhost:8080/");
+    }
+
+    @PostMapping("/cart/clear")
+    public ModelAndView clear() {
+        cartService.clear();
         return new ModelAndView("redirect:" + "http://localhost:8080/");
     }
 

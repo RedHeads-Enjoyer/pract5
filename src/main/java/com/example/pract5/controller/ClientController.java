@@ -1,9 +1,7 @@
 package com.example.pract5.controller;
 
-import com.example.pract5.entity.Book;
 import com.example.pract5.entity.Client;
 import com.example.pract5.exception.ResourceNotFoundException;
-import com.example.pract5.service.BookService;
 import com.example.pract5.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

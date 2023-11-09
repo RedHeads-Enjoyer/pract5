@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
 import java.util.List;
@@ -60,22 +61,31 @@ public class CartService {
 
         if (cart.getType() == Type.Books) {
             Book book = bookRepository.findById(cart.getProduct_id()).orElseThrow();
-            if (book.getAmount() < cart.getProduct_amount() + 1) {
+            if (book.getAmount() == 0) {
                 return ResponseEntity.ok(cart);
+            } else {
+                book.setAmount(book.getAmount() - 1);
+                bookRepository.save(book);
             }
         }
 
         if (cart.getType() == Type.Electronics) {
             Telephone telephone = telephoneRepository.findById(cart.getProduct_id()).orElseThrow();
-            if (telephone.getAmount() < cart.getProduct_amount() + 1) {
+            if (telephone.getAmount() == 0) {
                 return ResponseEntity.ok(cart);
+            } else {
+                telephone.setAmount(telephone.getAmount() - 1);
+                telephoneRepository.save(telephone);
             }
         }
 
         if (cart.getType() == Type.Plumbing) {
             WashingMachine washingMachine = washingMachineRepository.findById(cart.getProduct_id()).orElseThrow();
-            if (washingMachine.getAmount() < cart.getProduct_amount() + 1) {
+            if (washingMachine.getAmount() == 0) {
                 return ResponseEntity.ok(cart);
+            }else {
+                washingMachine.setAmount(washingMachine.getAmount() - 1);
+                washingMachineRepository.save(washingMachine);
             }
         }
         cart.setProduct_amount(cart.getProduct_amount() + 1);
@@ -111,4 +121,37 @@ public class CartService {
         }
     }
 
+    public void clear() {
+        cartRepository.deleteAll();
+    }
+
+
+    public void create(@RequestParam("productId") int productId, @RequestParam("clientId") int clientId, @RequestParam("type")Type type, @RequestParam("title") String  title) {
+        if (type == Type.Books) {
+            Book book = bookRepository.findById(productId).orElseThrow();
+            if (book.getAmount() != 0) {
+                book.setAmount(book.getAmount() - 1);
+                bookRepository.save(book);
+                save(new Cart(type, productId, 1, clientId, title));
+            }
+        }
+
+        else if (type == Type.Plumbing) {
+            WashingMachine washingMachine = washingMachineRepository.findById(productId).orElseThrow();
+            if (washingMachine.getAmount() != 0) {
+                washingMachine.setAmount(washingMachine.getAmount() - 1);
+                washingMachineRepository.save(washingMachine);
+                save(new Cart(type, productId, 1, clientId, title));
+            }
+        }
+
+        else if (type == Type.Electronics) {
+            Telephone telephone = telephoneRepository.findById(productId).orElseThrow();
+            if (telephone.getAmount() != 0) {
+                telephone.setAmount(telephone.getAmount() - 1);
+                telephoneRepository.save(telephone);
+                save(new Cart(type, productId, 1, clientId, title));
+            }
+        }
+    }
 }
