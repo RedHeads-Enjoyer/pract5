@@ -1,7 +1,76 @@
 package com.example.pract5.service;
 
+import com.example.pract5.entity.*;
+import com.example.pract5.exception.ResourceNotFoundException;
+import com.example.pract5.repository.BookRepository;
+import com.example.pract5.repository.CartRepository;
+import com.example.pract5.repository.TelephoneRepository;
+import com.example.pract5.repository.WashingMachineRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class CartService {
+    @Autowired
+    CartRepository cartRepository;
+    @Autowired
+    BookRepository bookRepository;
+
+    @Autowired
+    TelephoneRepository telephoneRepository;
+
+    @Autowired
+    WashingMachineRepository washingMachineRepository;
+
+    public List<Cart> getAll() {
+        return cartRepository.findAll();
+    }
+
+    public Cart save(@RequestBody Cart cart) {
+        return cartRepository.save(cart);
+    }
+
+    public ResponseEntity<Map<String, Boolean>> delete(@PathVariable int id) {
+        Cart cart = cartRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Cart not exist with id :" + id));
+
+        cartRepository.delete(cart);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deleted", Boolean.TRUE);
+        return ResponseEntity.ok(response);
+    }
+
+    public ResponseEntity<Cart> update(@PathVariable int id, @RequestBody Cart newCart) throws ResourceNotFoundException {
+        Cart cart = cartRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Cart not exist with id :" + id));
+
+        if (cart.getType() == Type.Books) {
+            Book book = bookRepository.findById(newCart.getProduct_id()).orElseThrow();
+            if (book.getAmount() < newCart.getProduct_amount()) {
+                return ResponseEntity.ok(cart);
+            }
+        }
+        if (cart.getType() == Type.Electronics) {
+            Telephone telephone = telephoneRepository.findById(newCart.getProduct_id()).orElseThrow();
+            if (telephone.getAmount() < newCart.getProduct_amount()) {
+                return ResponseEntity.ok(cart);
+            }
+        }
+        if (cart.getType() == Type.Plumbing) {
+            WashingMachine washingMachine = washingMachineRepository.findById(newCart.getProduct_id()).orElseThrow();
+            if (washingMachine.getAmount() < newCart.getProduct_amount()) {
+                return ResponseEntity.ok(cart);
+            }
+        }
+        Cart updatedCart = cartRepository.save(newCart);
+        return ResponseEntity.ok(updatedCart);
+    }
+
 }

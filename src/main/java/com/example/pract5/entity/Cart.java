@@ -9,9 +9,6 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
-    @JoinColumn(name = "client_id")
-    private Client client;
 
     @Column
     private Type type;
@@ -22,19 +19,34 @@ public class Cart {
     @Column
     private int product_amount;
 
-    public Cart(Client client, Type type, int product_id, int product_amount) {
-        this.client = client;
+    @Column
+    private int client_id;
+
+    public Cart() {
+
+    }
+
+    public int getClient_id() {
+        return client_id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setClient_id(int client_id) {
+        this.client_id = client_id;
+    }
+
+    public Cart(Type type, int product_id, int product_amount, int client_id) {
         this.type = type;
         this.product_id = product_id;
         this.product_amount = product_amount;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
+        this.client_id = client_id;
     }
 
     public Type getType() {

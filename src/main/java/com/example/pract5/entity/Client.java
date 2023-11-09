@@ -2,7 +2,8 @@ package com.example.pract5.entity;
 
 import jakarta.persistence.*;
 
-import java.util.List;
+import java.util.ArrayList;
+
 
 @Entity
 @Table
@@ -55,9 +56,6 @@ public class Client {
     @Column
     private String email;
 
-
-    @OneToMany(mappedBy="client")
-    private List<Cart> cartList;
 
     public Client(String name, String login, String password, String email) {
         this.name = name;

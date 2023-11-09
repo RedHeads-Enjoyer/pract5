@@ -16,6 +16,10 @@ public class WashingMachine {
     @Column
     private String company;
 
+    public WashingMachine() {
+
+    }
+
     public String getCompany() {
         return company;
     }

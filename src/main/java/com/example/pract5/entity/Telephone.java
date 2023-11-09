@@ -31,6 +31,10 @@ public class Telephone {
     @Column
     private int amount;
 
+    public Telephone() {
+
+    }
+
 
     public String getCompany() {
         return company;
