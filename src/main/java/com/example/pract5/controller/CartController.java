@@ -26,7 +26,7 @@ public class CartController {
     @PostMapping ("/cart")
     public ModelAndView  create(@RequestParam("productId") int productId, @RequestParam("clientId") int clientId, @RequestParam("type")Type type, @RequestParam("title") String  title) {
         cartService.create(productId, clientId,type, title);
-        return new ModelAndView("redirect:" + "http://localhost:8080/");
+        return new ModelAndView("redirect:" + "http://localhost/");
     }
 
 
@@ -38,19 +38,19 @@ public class CartController {
     @PostMapping("/cart/increase")
     public ModelAndView increase(@RequestParam("productId") int id) throws ResourceNotFoundException {
         cartService.increase(id);
-        return new ModelAndView("redirect:" + "http://localhost:8080/");
+        return new ModelAndView("redirect:" + "http://localhost/");
     }
 
     @PostMapping("/cart/decrease")
     public ModelAndView decrease(@RequestParam("productId") int id) throws ResourceNotFoundException {
         cartService.decrease(id);
-        return new ModelAndView("redirect:" + "http://localhost:8080/");
+        return new ModelAndView("redirect:" + "http://localhost/");
     }
 
     @PostMapping("/cart/clear")
     public ModelAndView clear() {
         cartService.clear();
-        return new ModelAndView("redirect:" + "http://localhost:8080/");
+        return new ModelAndView("redirect:" + "http://localhost/");
     }
 
     @DeleteMapping("/cart/{id}")
