@@ -69,9 +69,16 @@ public class CartController {
         return cartService.getAll();
     }
 
-    @PutMapping("/cart/{id}")
-    public void increase(@PathVariable int id) throws ResourceNotFoundException {
+    @PostMapping("/cart/increase")
+    public ModelAndView increase(@RequestParam("productId") int id) throws ResourceNotFoundException {
         cartService.increase(id);
+        return new ModelAndView("redirect:" + "http://localhost:8080/");
+    }
+
+    @PostMapping("/cart/decrease")
+    public ModelAndView decrease(@RequestParam("productId") int id) throws ResourceNotFoundException {
+        cartService.decrease(id);
+        return new ModelAndView("redirect:" + "http://localhost:8080/");
     }
 
     @DeleteMapping("/cart/{id}")

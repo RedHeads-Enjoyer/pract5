@@ -34,6 +34,14 @@ public class CartService {
     }
 
     public Cart save(@RequestBody Cart cart) {
+        List<Cart> carts = cartRepository.findAll();
+        for (Cart c : carts) {
+            if (c.getProduct_id() == cart.getProduct_id() && c.getType() == cart.getType()) {
+                cartRepository.delete(c);
+                c.setProduct_amount(c.getProduct_amount() + 1);
+                return cartRepository.save(c);
+            }
+        }
         return cartRepository.save(cart);
     }
 
@@ -79,29 +87,27 @@ public class CartService {
     public void decrease(@PathVariable int id) throws ResourceNotFoundException {
         Cart cart = cartRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not exist with id :" + id));
+        Type type = cart.getType();
+        if (type == Type.Books) {
+            Book book = bookRepository.findById(cart.getProduct_id()).orElseThrow();
+            bookRepository.delete(book);
+            book.setAmount(book.getAmount() + 1);
+            bookRepository.save(book);
+        }
+        else if (type == Type.Electronics) {
+            Telephone telephone = telephoneRepository.findById(cart.getProduct_id()).orElseThrow();
+            telephoneRepository.delete(telephone);
+            telephone.setAmount(telephone.getAmount() + 1);
+            telephoneRepository.save(telephone);
+        }
+        else if (type == Type.Plumbing) {
+            WashingMachine washingMachine = washingMachineRepository.findById(cart.getProduct_id()).orElseThrow();
+            washingMachineRepository.delete(washingMachine);
+            washingMachine.setAmount(washingMachine.getAmount() + 1);
+            washingMachineRepository.save(washingMachine);
+        }
         if (cart.getProduct_amount() == 1) {
             cartRepository.delete(cart);
-        }
-        else {
-            Type type = cart.getType();
-            if (type == Type.Books) {
-                Book book = bookRepository.findById(cart.getProduct_id()).orElseThrow();
-                bookRepository.delete(book);
-                book.setAmount(book.getAmount() + 1);
-                bookRepository.save(book);
-            }
-            else if (type == Type.Electronics) {
-                Telephone telephone = telephoneRepository.findById(cart.getProduct_id()).orElseThrow();
-                telephoneRepository.delete(telephone);
-                telephone.setAmount(telephone.getAmount() + 1);
-                telephoneRepository.save(telephone);
-            }
-            else if (type == Type.Plumbing) {
-                WashingMachine washingMachine = washingMachineRepository.findById(cart.getProduct_id()).orElseThrow();
-                washingMachineRepository.delete(washingMachine);
-                washingMachine.setAmount(washingMachine.getAmount() + 1);
-                washingMachineRepository.save(washingMachine);
-            }
         }
     }
 
