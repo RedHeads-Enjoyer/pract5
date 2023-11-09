@@ -47,30 +47,62 @@ public class CartService {
         return ResponseEntity.ok(response);
     }
 
-    public ResponseEntity<Cart> update(@PathVariable int id, @RequestBody Cart newCart) throws ResourceNotFoundException {
+    public ResponseEntity<Cart> increase(@PathVariable int id) throws ResourceNotFoundException {
         Cart cart = cartRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not exist with id :" + id));
 
         if (cart.getType() == Type.Books) {
-            Book book = bookRepository.findById(newCart.getProduct_id()).orElseThrow();
-            if (book.getAmount() < newCart.getProduct_amount()) {
+            Book book = bookRepository.findById(cart.getProduct_id()).orElseThrow();
+            if (book.getAmount() < cart.getProduct_amount() + 1) {
                 return ResponseEntity.ok(cart);
             }
         }
+
         if (cart.getType() == Type.Electronics) {
-            Telephone telephone = telephoneRepository.findById(newCart.getProduct_id()).orElseThrow();
-            if (telephone.getAmount() < newCart.getProduct_amount()) {
+            Telephone telephone = telephoneRepository.findById(cart.getProduct_id()).orElseThrow();
+            if (telephone.getAmount() < cart.getProduct_amount() + 1) {
                 return ResponseEntity.ok(cart);
             }
         }
+
         if (cart.getType() == Type.Plumbing) {
-            WashingMachine washingMachine = washingMachineRepository.findById(newCart.getProduct_id()).orElseThrow();
-            if (washingMachine.getAmount() < newCart.getProduct_amount()) {
+            WashingMachine washingMachine = washingMachineRepository.findById(cart.getProduct_id()).orElseThrow();
+            if (washingMachine.getAmount() < cart.getProduct_amount() + 1) {
                 return ResponseEntity.ok(cart);
             }
         }
-        Cart updatedCart = cartRepository.save(newCart);
+        cart.setProduct_amount(cart.getProduct_amount() + 1);
+        Cart updatedCart = cartRepository.save(cart);
         return ResponseEntity.ok(updatedCart);
+    }
+
+    public void decrease(@PathVariable int id) throws ResourceNotFoundException {
+        Cart cart = cartRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Cart not exist with id :" + id));
+        if (cart.getProduct_amount() == 1) {
+            cartRepository.delete(cart);
+        }
+        else {
+            Type type = cart.getType();
+            if (type == Type.Books) {
+                Book book = bookRepository.findById(cart.getProduct_id()).orElseThrow();
+                bookRepository.delete(book);
+                book.setAmount(book.getAmount() + 1);
+                bookRepository.save(book);
+            }
+            else if (type == Type.Electronics) {
+                Telephone telephone = telephoneRepository.findById(cart.getProduct_id()).orElseThrow();
+                telephoneRepository.delete(telephone);
+                telephone.setAmount(telephone.getAmount() + 1);
+                telephoneRepository.save(telephone);
+            }
+            else if (type == Type.Plumbing) {
+                WashingMachine washingMachine = washingMachineRepository.findById(cart.getProduct_id()).orElseThrow();
+                washingMachineRepository.delete(washingMachine);
+                washingMachine.setAmount(washingMachine.getAmount() + 1);
+                washingMachineRepository.save(washingMachine);
+            }
+        }
     }
 
 }

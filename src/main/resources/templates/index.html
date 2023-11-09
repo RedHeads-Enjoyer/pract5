@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>Я так устал, что щас наложу себе в ркуки #АльПАчино</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Наименование</th>
+            <th>Цена</th>
+            <th>Количество</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${books}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.title}"></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.amount}"></td>
+            <td>
+                <form method="POST" th:action="@{/api/cart}">
+                    <input type="hidden" name="type" th:value="${product.type}" />
+                    <input type="hidden" name="productId" th:value="${product.id}" />
+                    <input type="hidden" name="clientId" th:value="${1}" />
+                    <input type="hidden" name="title" th:value="${product.title}" />
+                    <button type="submit">Добавить в корзину</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:each="product : ${telephones}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.title}"></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.amount}"></td>
+            <td>
+                <form method="POST" th:action="@{/api/cart}">
+                    <input type="hidden" name="type" th:value="${product.type}" />
+                    <input type="hidden" name="productId" th:value="${product.id}" />
+                    <input type="hidden" name="clientId" th:value="${1}" />
+                    <input type="hidden" name="title" th:value="${product.title}" />
+                    <button type="submit">Добавить в корзину</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:each="product : ${washing}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.title}"></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.amount}"></td>
+            <td>
+                <form method="POST" th:action="@{/api/cart}">
+                    <input type="hidden" name="type" th:value="${product.type}" />
+                    <input type="hidden" name="productId" th:value="${product.id}" />
+                    <input type="hidden" name="clientId" th:value="${1}" />
+                    <input type="hidden" name="title" th:value="${product.title}" />
+                    <button type="submit">Добавить в корзину</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Корзина -->
+
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Тип</th>
+            <th>ID продукта</th>
+            <th>Количество</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${cart}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.title}"></td>
+            <td th:text="${product.type}"></td>
+            <td th:text="${product.product_id}"></td>
+            <td th:text="${product.product_amount}"></td>
+            <td>
+                <form th:action="@{/cart/add}" method="post">
+                    <input type="hidden" name="productId" th:value="${product.id}" />
+                    <button type="submit">Добавить в корзину</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>

@@ -11,7 +11,7 @@ public class WashingMachine {
     private int id;
 
     @Column
-    private final Type type = Type.Electronics;
+    private final Type type = Type.Plumbing;
 
     @Column
     private String company;
@@ -62,6 +62,14 @@ public class WashingMachine {
 
     @Column
     private float tankSize;
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Type getType() {
+        return type;
+    }
 
     @Column
     private int seller_id;

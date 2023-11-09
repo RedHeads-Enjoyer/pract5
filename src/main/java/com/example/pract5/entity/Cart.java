@@ -9,7 +9,6 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-
     @Column
     private Type type;
 
@@ -21,6 +20,9 @@ public class Cart {
 
     @Column
     private int client_id;
+
+    @Column
+    private String title;
 
     public Cart() {
 
@@ -42,11 +44,20 @@ public class Cart {
         this.client_id = client_id;
     }
 
-    public Cart(Type type, int product_id, int product_amount, int client_id) {
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Cart(Type type, int product_id, int product_amount, int client_id, String title) {
         this.type = type;
         this.product_id = product_id;
         this.product_amount = product_amount;
         this.client_id = client_id;
+        this.title = title;
     }
 
     public Type getType() {
