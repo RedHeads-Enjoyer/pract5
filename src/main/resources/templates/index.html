@@ -5,7 +5,6 @@
     <title>Title</title>
 </head>
 <body>
-    <h1>Я так устал, что щас наложу себе в ркуки #АльПАчино</h1>
     <table>
         <thead>
         <tr>
@@ -85,17 +84,16 @@
             <td th:text="${product.product_id}"></td>
             <td th:text="${product.product_amount}"></td>
             <td>
-                <div>
-
+                <div style="display: flex;">
+                    <form th:action="@{/api/cart/increase}" method="post">
+                        <input type="hidden" name="productId" th:value="${product.id}" />
+                        <button type="submit">+</button>
+                    </form>
+                    <form th:action="@{/api/cart/decrease}" method="post">
+                        <input type="hidden" name="productId" th:value="${product.id}" />
+                        <button type="submit">-</button>
+                    </form>
                 </div>
-                <form th:action="@{/api/cart/increase}" method="post">
-                    <input type="hidden" name="productId" th:value="${product.id}" />
-                    <button type="submit">+</button>
-                </form>
-                <form th:action="@{/api/cart/decrease}" method="post">
-                    <input type="hidden" name="productId" th:value="${product.id}" />
-                    <button type="submit">-</button>
-                </form>
             </td>
         </tr>
         </tbody>
